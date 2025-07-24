@@ -824,7 +824,8 @@ game_loop:
 	
 	#Fantasmas
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-fantasmas:	
+fantasmas:
+		
 	move $4, $20         # Passa a posição ATUAL do fantasma ($20) para $4 (a0)
     	move $5, $18        # Passa a base da tela principal ($16) para $5 (a1)
     	move $6, $23         # Passa a base da cópia de fundo ($17) para $6 (a2)
@@ -2625,7 +2626,7 @@ erase_pacman:
 
     jr $31
 delay:
-    addi $24, $0, 1999
+    addi $24, $0, 15000
 lacoD:
     beq $24, $0, fimD
     nop
@@ -2741,6 +2742,11 @@ check_movement_validity_pacman_after_input: # Label para unificar o fluxo após 
     
     addi $19, $16, -1024
     lw $8, 0($19)
+    lw $10, color_azul_claro
+    beq $8, $10, fim
+    
+    addi $19, $16, -1024
+    lw $8, 0($19)
     lw $10, color_laranja
     beq $8, $10, fim
     
@@ -2776,6 +2782,11 @@ check_left_collision:
     addi $19, $16, 1516  # Pega o pixel do centro da base do Pac-Man (offset 3076)
     lw $8, 0($19)
     lw $10, color_laranja
+    beq $8, $10, fim
+    
+    addi $19, $16, 1516  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_azul_claro
     beq $8, $10, fim
     
     addi $19, $16, 1516  # Pega o pixel do centro da base do Pac-Man (offset 3076)
@@ -2822,6 +2833,11 @@ check_down_collision:
     
     addi $19, $16, 4096  # Pega o pixel do centro da base do Pac-Man (offset 3076)
     lw $8, 0($19)
+    lw $10, color_azul_claro
+    beq $8, $10, fim
+    
+    addi $19, $16, 4096  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
     lw $10, color_vermelho
     beq $8, $10, fim
     
@@ -2857,6 +2873,11 @@ check_right_collision:
     addi $19, $16, 1556  # Pega o pixel do centro da base do Pac-Man (offset 3076)
     lw $8, 0($19)
     lw $10, color_laranja
+    beq $8, $10, fim
+    
+    addi $19, $16, 1556  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_azul_claro
     beq $8, $10, fim
     
     addi $19, $16, 1556  # Pega o pixel do centro da base do Pac-Man (offset 3076)
