@@ -1,0 +1,2938 @@
+.data
+# Definições de Cores (permanecem aqui)
+color_rosa:             .word 0xFFC0CB
+color_branco:           .word 0xFFFFFF
+color_vermelho:         .word 0xFF0000
+color_amarelo:          .word 0xFFFF00
+color_verde_fantasma:   .word 0x00FF00
+color_laranja:          .word 0xFFA500
+color_azul:             .word 0x0000FF
+color_ciano:            .word 0x00FFFF
+color_preto:            .word 0x000000
+color_azul_claro:	.word 0x00FFFF
+
+contador:		.word 72
+
+limite_baixo_fantasma_rosa:	.word 0x100168F4
+limite_cima_fantasma_laranja:	.word 0x10010774
+inicial_fantasma_azul:	.word 0x100108B0
+limite_cima_esquerdo_azul:	.word 0x10010814
+limite_cima_direito_azul:	.word 0x100109D4
+limite_baixo_esquerda_azul:	.word 0x10016814
+limite_baixo_direita_azul:	.word 0x100169D4
+
+.text
+main:	
+	.eqv KBD_CONTROL 0xFFFF0000
+	.eqv KBD_DATA    0xFFFF0004
+	.eqv SCREEN_BASE 0x10010000
+	.eqv BG_BASE 	 0x10018000
+	
+	lui $8, 0x1001
+	
+#BORDAS	
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	li $9, 123
+linhaCimaAzul:
+	lw $7, color_azul
+	beq $9, $0, ColunaEsquerdaAzul
+	sw $7, 1028($8)
+	addi $8, $8, 4
+	addi $9, $9, -1
+	j linhaCimaAzul
+	
+ColunaEsquerdaAzul:
+	lui $8, 0x1001
+	li $9, 58
+	
+continuaColunaEsquerda:
+	beq $9, $0, ColunaDireitaAzul
+	sw $7, 1540($8)
+	addi $8, $8, 512
+	addi $9, $9, -1
+	j continuaColunaEsquerda
+	
+ColunaDireitaAzul:
+	lui $8, 0x1001
+	li $9, 58
+	
+continuaColunaDireita:
+	beq $9, $0, bordaBaixoAzul
+	sw $7, 1516($8)
+	addi $8, $8, 512
+	addi $9, $9, -1
+	j continuaColunaDireita
+	
+bordaBaixoAzul:
+	li $9, 123
+	lui $8, 0x1001
+
+continuaBordaBaixo:
+	beq $9, $0, linha_t
+	sw $7,30724($8) 
+	addi $8, $8, 4
+	addi $9, $9, -1
+	j continuaBordaBaixo
+	
+linha_t:
+	li $9, 18
+	lui $8, 0x1001
+
+continualinha_t:
+	beq $9, $0, linha_t1
+	sw $7,14604($8) 
+	sw $7,15116($8)
+	sw $7,17164($8)
+	sw $7,17676($8)
+	addi $8, $8, 4
+	addi $9, $9, -1
+	j continualinha_t
+	
+linha_t1:
+	li $9, 7
+	lui $8, 0x1001
+
+continualinha_t1:
+	beq $9, $0, linha_t2
+	sw $7,6476($8) 
+	sw $7,6988($8)
+	sw $7,25420($8) 
+	sw $7,25932($8)
+	addi $8, $8, 4
+	addi $9, $9, -1
+	j continualinha_t1
+	
+linha_t2:
+	li $9, 14
+	lui $8, 0x1001
+
+continualinha_t2:
+	beq $9, $0, linha_t3
+	sw $7,7500($8) 
+	sw $7,7504($8)
+	sw $7,7520($8) 
+	sw $7,7524($8)
+	
+	sw $7,18252($8) 
+	sw $7,18256($8)
+	sw $7,18272($8) 
+	sw $7,18276($8)
+	addi $8, $8,512
+	addi $9, $9, -1
+	j continualinha_t2
+
+linha_t3:
+	li $9, 7
+	lui $8, 0x1001
+
+continualinha_t3:
+	beq $9, $0, olhoCima
+	sw $7,14604($8)
+	sw $7,14608($8)
+	sw $7 14688($8) 
+	sw $7,14692($8)
+	
+	addi $8, $8,512
+	addi $9, $9, -1
+	j continualinha_t3
+	
+olhoCima:
+    lui $8, 0x1001
+    li $9, 15
+contOlhoCima:
+    beq $9, $0, olhoCimaLado
+    sw $7, 6540($8)
+    sw $7, 6544($8)
+    sw $7, 6592($8)
+    sw $7, 6596($8)
+    addi $8,$8, 512
+    addi $9, $9, -1
+    j contOlhoCima
+olhoCimaLado:
+    lui $8, 0x1001
+    li $9, 11
+contOlhoCimaLado:
+    beq $9, $0, olhoBaixo
+    sw $7, 6548($8)
+    sw $7, 7060($8)
+    sw $7, 13204($8)
+    sw $7, 13716($8)
+    addi $8,$8, 4
+    addi $9, $9, -1
+    j contOlhoCimaLado
+olhoBaixo:
+    lui $8, 0x1001
+    li $9, 11
+contOlhoBaixo:
+    beq $9, $0, olhoBaixoLados
+    sw $7, 18836($8)
+    sw $7, 19348($8)
+    sw $7, 25492($8)
+    sw $7, 26004($8)
+    addi $8,$8, 4
+    addi $9, $9, -1
+    j contOlhoBaixo
+olhoBaixoLados:
+    lui $8, 0x1001
+    li $9, 15
+contOlhoBaixoLados:
+    beq $9, $0, olhoPequenoCima
+    sw $7, 18828($8)
+    sw $7, 18832($8)
+    sw $7, 18880($8)
+    sw $7, 18884($8)
+    addi $8,$8, 512
+    addi $9, $9, -1
+    j contOlhoBaixoLados
+olhoPequenoCima:
+    lui $8, 0x1001
+    li $9, 7
+contOlhoPequenoCima:
+    beq $9, $0, olhoPequenoCima2
+    sw $7, 6412($8)
+    sw $7, 6416($8)
+    sw $7, 6432($8)
+    sw $7, 6436($8)
+    addi $8,$8, 512
+    addi $9, $9, -1
+    j contOlhoPequenoCima
+olhoPequenoCima2:
+    lui $8, 0x1001
+    li $9, 3
+contOlhoPequenoCima2:
+    beq $9, $0, olhoPequenoBaixo
+    sw $7, 6420($8)
+    sw $7, 6932($8)
+    sw $7, 8980($8)
+    sw $7, 9492($8)
+    addi $8,$8, 4
+    addi $9, $9, -1
+    j contOlhoPequenoCima2
+olhoPequenoBaixo:
+    lui $8, 0x1001
+    li $9, 7
+contOlhoPequenoBaixo:
+    beq $9, $0, olhoPequenoBaixo2
+    sw $7, 22796($8)
+    sw $7, 22800($8)
+    sw $7, 22816($8)
+    sw $7, 22820($8)
+    addi $8,$8, 512
+    addi $9, $9, -1
+    j contOlhoPequenoBaixo
+olhoPequenoBaixo2:
+    lui $8, 0x1001
+    li $9, 3
+contOlhoPequenoBaixo2:
+    beq $9, $0, obstaculosEsquerda
+    sw $7, 22804($8)
+    sw $7, 23316($8)
+    sw $7, 25364($8)
+    sw $7, 25876($8)
+    addi $8,$8, 4
+    addi $9, $9, -1
+    j contOlhoPequenoBaixo2
+	
+	
+#FIM BORDAS
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+obstaculosEsquerda:
+
+obstaculoEsquerdaCima:
+	lui $8, 0x1001
+	li $9, 15
+
+contObstaculoEsquerdaCima:
+	beq $9, $0, cima
+	sw $7, 6192($8)
+	sw $7, 6188($8)
+	addi $8,$8, 512
+	addi $9, $9, -1
+	j contObstaculoEsquerdaCima
+	
+cima:
+	lui $8, 0x1001
+	li $9, 11
+	
+contCima:
+	beq $9, $0, dir
+	sw $7, 6196($8)
+	sw $7, 6708($8)
+	addi $8, $8, 4
+	addi $9, $9, -1
+	j contCima
+
+dir:
+	lui $8, 0x1001
+	li $9, 7
+contDir:
+	beq $9, $0, cimaBaixo
+	sw $7, 6240($8)
+	sw $7, 6244($8) 
+	addi $8, $8, 512
+	addi $9, $9, -1
+	j contDir
+	
+cimaBaixo:
+	lui $8, 0x1001
+	li $9, 9
+contCM:
+	beq $9, $0, dirBaixo
+	sw $7, 8800($8)
+	sw $7, 9312($8)
+	addi $8, $8, -4
+	addi $9, $9, -1
+	j contCM
+
+dirBaixo:
+	lui $8, 0x1001
+	li $9, 8
+contDirBaixo:
+	beq $9, $0, baixo
+	sw $7, 9796($8)
+	sw $7, 9792($8)
+	addi $8, $8, 512
+	addi $9, $9, -1
+	j contDirBaixo
+
+baixo:
+	lui $8, 0x1001
+	li $9, 3
+contBaixo:
+	beq $9, $0, obstaculoEsquerdaBaixo
+	sw $7,12860($8)
+	sw $7,13372($8)
+	addi $8, $8, -4 
+	addi $9, $9, -1
+	j contBaixo
+
+
+
+obstaculoEsquerdaBaixo:
+	lui $8, 0x1001
+	li $9, 15
+contEB:
+#1
+	beq $9, $0, cimma 
+	sw $7, 18476($8)
+	sw $7, 18480($8)
+	addi $8, $8, 512
+	addi $9, $9,-1
+	j contEB
+
+cimma:
+	lui $8, 0x1001
+	li $9, 5
+contCimma:
+	beq $9, $0, cimaDirr
+	sw $7, 18484($8)
+	sw $7, 18996($8)
+	addi $8,$8,4
+	addi $9, $9, -1
+	j contCimma
+	
+cimaDirr:
+	lui $8, 0x1001
+	li $9, 8
+contCimaDirr:
+	beq $9, $0, dirdir
+	sw $7, 19520($8)
+	sw $7, 19524($8)
+	addi $8, $8, 512
+	addi $9, $9,-1
+	j contCimaDirr
+	
+dirdir:
+	lui $8, 0x1001
+	li $9, 8
+contDirDir:
+	beq $9, $0, dirBaixoDir
+	sw $7, 23112($8)
+	sw $7, 22600($8)
+	addi $8, $8, 4
+	addi $9, $9, -1
+	j contDirDir
+
+dirBaixoDir:
+	lui $8, 0x1001
+	li $9,5
+contBaixoDir:
+#5
+	beq $9, $0, bb
+	sw $7, 23648($8)
+	sw $7, 23652($8)
+	addi $8, $8, 512
+	addi $9, $9, -1
+	j contBaixoDir
+bb:
+	lui $8, 0x1001
+	li $9, 11
+contBB:
+	beq $9, $0, meio
+	sw $7, 25692($8)
+	sw $7, 25180($8)
+	addi $8,$8, -4
+	addi $9, $9, -1
+	j contBB
+	
+meio:
+	lui $8, 0x1001
+	li $9, 15
+contMeio:
+	beq $9, $0, meio2
+	sw $7, 14444($8)
+	sw $7, 14956($8)
+	addi $8,$8, 4
+	addi $9, $9, -1
+	j contMeio
+
+meio2:
+	lui $8, 0x1001
+	li $9, 5
+contMeio2:
+	beq $9, $0, Meio3
+	sw $7,15468($8)
+	sw $7,15472($8)
+	addi $8, $8, 512 
+	addi $9, $9, -1
+	j contMeio2
+Meio3:
+	lui $8, 0x1001
+	li $9, 5
+contMeio3:
+	beq $9, $0, Meio4
+	sw $7, 15520($8)
+	sw $7, 15524($8)
+	addi $8, $8, 512
+	addi $9, $9, -1
+	j contMeio3
+Meio4:
+	lui $8, 0x1001
+	li $9, 11
+contMeio4:
+	beq $9, $0, obstaculoCimaDireita
+	sw $7, 17012($8)
+	sw $7, 17524($8)
+	addi $8,$8, 4
+	addi $9, $9, -1
+	j contMeio4
+	
+obstaculoCimaDireita:
+	lui $8, 0x1001
+	li $9, 23
+contObsCimaDireita:
+	beq $9, $0, cimaDireita2
+	sw $7, 6284($8)
+	sw $7, 6796($8)
+	addi $8, $8, 4
+	addi $9, $9, -1
+	j contObsCimaDireita
+cimaDireita2:
+	lui $8, 0x1001
+	li $9, 5
+contCimaDireita2:
+	beq $9, $0, cimaDireita3
+	sw $7,7308($8)
+	sw $7, 7312($8)
+	addi $8, $8, 512
+	addi $9, $9, -1
+	j contCimaDireita2
+
+cimaDireita3:
+	lui $8, 0x1001
+	li $9,16
+contCimaDireita3:
+	beq $9, $0, cimaDireita4
+	sw $7, 8852($8)
+	sw $7, 9364($8)
+	addi $8, $8, 4
+	addi $9, $9, -1
+	j contCimaDireita3
+	
+cimaDireita4:
+	lui $8, 0x1001
+	li $9, 8
+contCimaDireita4:
+	beq $9, $0, cimaDireita5
+	sw $7, 9932($8)
+	sw $7, 9936($8)
+	addi $8, $8, 512
+	addi $9, $9, -1
+	j contCimaDireita4
+
+cimaDireita5:
+	lui $8, 0x1001
+	li $9, 5
+contCimaDireita5:
+	beq $9, $0, cimaDireita6
+	sw $7,13012($8)
+	sw $7, 13524($8)
+	addi $8, $8, 4 
+	addi $9,$9, -1
+	j contCimaDireita5
+	
+cimaDireita6:
+	lui $8, 0x1001
+	li $9, 11
+contCimaDireita6:
+	beq $9, $0, baixoDireita
+	sw $7, 12512($8)
+	sw $7, 12516($8)
+	addi $8, $8, -512
+	addi $9, $9, -1
+	j contCimaDireita6
+	
+baixoDireita:
+	lui $8, 0x1001
+	li $9, 7
+contBaixaDireita:
+	beq $9, $0, BaixoDireita2
+	sw $7, 18636($8)
+	sw $7, 19148($8)
+	addi $8, $8, 4
+	addi $9, $9, -1
+	j contBaixaDireita
+	
+BaixoDireita2:
+	lui $8, 0x1001
+	li $9, 8
+contBaixoDireita2:
+	beq $9, $0, BaixoDireita3
+	sw $7, 19660($8)
+	sw $7, 19664($8)
+	addi $8, $8, 512
+	addi $9, $9,-1
+	j contBaixoDireita2
+	
+BaixoDireita3:
+	lui $8, 0x1001
+	li $9, 16
+contBaixoDireita3:
+	beq $9, $0, BaixoDireita4
+	sw $7, 22728($8)
+	sw $7, 23240($8)
+	addi $8,$8, -4
+	addi $9, $9, -1
+	j contBaixoDireita3
+	
+BaixoDireita4:
+	lui $8, 0x1001
+	li $9,5
+contBaixoDireita4:
+	beq $9, $0, BaixoDireita5
+	sw $7, 23692($8)
+	sw $7, 23696($8)
+	addi $8,$8, 512
+	addi $9, $9, -1
+	j contBaixoDireita4
+	
+BaixoDireita5:
+	lui $8, 0x1001
+	li $9,21
+contBaixoDireita5:
+	beq $9, $0, BaixoDireita6
+	sw $7,25236($8)
+	sw $7,25748($8)
+	addi $8,$8, 4
+	addi $9,$9,-1
+	j contBaixoDireita5
+	
+BaixoDireita6:
+	lui $8, 0x1001
+	li $9,12
+contBaixoDireita6:
+	beq $9, $0, pont1
+	sw $7, 25312($8)
+	sw $7, 25316($8)
+	addi $8,$8, -512
+	addi $9, $9, -1
+	j contBaixoDireita6
+#FIM OBSTACULOS ESQUERDA
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#pontos amarelos
+
+pont1:
+	lui $8, 0x1001
+	li $9, 5
+	lw $10, color_amarelo
+	
+cont1pont:                       
+	beq $9, $0, pont3             
+	sw $10,7704($8)
+	addi $8, $8, 4096
+	addi $9, $9, -1
+	j cont1pont
+	
+pont3:
+	lui $8, 0x1001
+	li $9, 6
+	lw $10, color_amarelo
+	
+cont3pont:                       
+	beq $9, $0, pont5             
+	sw $10,7928($8)
+	addi $8, $8, 4096
+	addi $9, $9, -1
+	j cont3pont
+	
+pont5:
+	lui $8, 0x1001
+	li $9, 2
+	
+cont5pont:                       
+	beq $9, $0, pont6             
+	sw $10,15928($8)
+	addi $8, $8, 32
+	addi $9, $9, -1
+	j cont5pont
+	
+pont6:
+	lui $8, 0x1001
+	li $9, 4
+cont6pont:                       
+	beq $9, $0, pont7              
+	sw $10,20056($8)
+	addi $8, $8, 32
+	addi $9, $9, -1
+	j cont6pont
+	
+pont7:
+	lui $8, 0x1001
+	li $9, 4
+
+cont7pont:                       
+	beq $9, $0, pont8              
+	sw $10,11864($8)
+	addi $8, $8, 32
+	addi $9, $9, -1
+	j cont7pont
+	
+pont8:
+	lui $8, 0x1001
+	li $9, 1
+cont8pont:                       
+	beq $9, $0, pont9             
+	sw $10,7800($8)
+	addi $9, $9, -1
+	j cont8pont
+	
+pont9:
+	lui $8, 0x1001
+	li $9,2
+
+cont9pont:                       
+	beq $9, $0,pont10             
+	sw $10,16056($8)
+	addi $8, $8, 32
+	addi $9, $9, -1
+	j cont9pont 
+	
+pont10:
+	lui $8, 0x1001
+	li $9,15
+
+cont10pont:                       
+	beq $9, $0, pont11           
+	sw $10,3608($8)
+	addi $8, $8, 32
+	addi $9, $9, -1
+	j cont10pont
+	
+pont11:
+	lui $8, 0x1001
+	li $9,15
+
+cont11pont:                       
+	beq $9, $0, pont12            
+	sw $10,28184($8)
+	addi $8, $8, 32
+	addi $9, $9, -1
+	j cont11pont
+
+pont12:
+	lui $8, 0x1001
+	li $9,6
+
+cont12pont:                       
+	beq $9, $0, pont13           
+	sw $10,8056($8)
+	sw $10,8152($8)
+	addi $8, $8, 4096
+	addi $9, $9, -1
+	j cont12pont
+	
+pont13:
+	lui $8, 0x1001
+	li $9,1
+
+cont13pont:                       
+	beq $9, $0, pont14           
+	sw $10,24184($8)
+	addi $8, $8, 0
+	addi $9, $9, -1
+	j cont13pont
+	
+pont14:
+	lui $8, 0x1001
+	li $9,3
+
+cont14pont:                       
+	beq $9, $0, pont15            
+	sw $10,12024($8)
+	sw $10,20216($8)
+	sw $10,16248($8)
+	addi $8, $8, 32
+	addi $9, $9, -1
+	j cont14pont
+
+pont15:
+	lui $8, 0x1001
+	li $9,2
+
+cont15pont:
+                       
+	beq $9, $0, copy_map_to_background             
+	sw $10,7992($8)
+	
+	addi $8, $8, 16384
+	addi $9, $9, -1
+	j cont15pont
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# ... (Seu código main e todo o desenho do mapa, terminando na rotina 'pil_direita_baixo2')
+#     Após 'pil_direita_baixo2:', seu programa deve continuar aqui para copiar o mapa.
+
+# --- Seção de Cópia do Mapa para Fundo ---
+
+copy_map_to_background:
+    # Registradores que vamos usar:
+    # $8:   Vai ser o ponteiro que lê da tela principal (começa em 0x10010000 e avança)
+    # $16:  Vai ser o ponteiro que escreve na área da cópia de fundo (começa em 0x10010000 + 32768 e avança)
+    # $9:   Contador do loop (número total de UGs a copiar: 8192)
+    # $17:  Registrador temporário para carregar/salvar a UG atual
+
+    # 1. Reinicia o ponteiro da tela principal ($8) para o início (0x10010000)
+    lui $8, 0x1001      # $8 = 0x10010000
+
+    # 2. Configura o ponteiro da tela de fundo ($16)
+    # Ele começa no endereço base da tela principal ($8) + o tamanho da tela (32768 bytes)
+    addi $16, $8, 32768 # $16 = 0x10010000 + 32768 (O SEU CALCULO! 0x10018000 em hexa)
+
+    # 3. Configura o contador do loop ($9)
+    # Temos 8192 UGs no total (512/4 largura * 256/4 altura = 128 * 64 = 8192 UGs)
+    li $9, 8192         # $9 = 8192
+
+copy_loop:
+    beq $9, $0, end_copy_map_to_background # Se o contador $9 chegar a zero, a cópia está completa
+
+    lw $17, 0($8)       # Carrega 1 UG (4 bytes) da tela principal (no endereço apontado por $8) para $17
+    sw $17, 0($16)      # Salva essa UG (que está em $17) na área da cópia de fundo (no endereço apontado por $16)
+
+    addi $8, $8, 4      # Avança o ponteiro da tela principal em 4 bytes (para a próxima UG)
+    addi $16, $16, 4    # Avança o ponteiro da cópia de fundo em 4 bytes (para a próxima UG)
+    addi $9, $9, -1     # Decrementa o contador de UGs copiadas
+
+    j copy_loop         # Volta para o início do loop
+
+end_copy_map_to_background:
+    # A partir deste ponto, a sua tela de fundo (mapa sem fantasmas) está
+    # completamente copiada e salva a partir do endereço 0x10010000 + 32768.
+
+    # Agora você pode desenhar seus fantasmas e Pac-Man em suas posições iniciais
+    # na tela principal (que ainda está em 0x10010000)
+    # e iniciar a lógica de movimento.
+
+    # Exemplo (você continuaria com o desenho dos fantasmas e o loop de jogo aqui)
+    # fantv1: ...
+    # fantr1: ...
+    # fantc1: ...
+    # pacman1: ...
+    
+    #pacman
+
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# Carrega o endereço base da tela principal em $22
+inicializar: 
+	lui $18, 0x1001      # $22 = 0x10010000 (Base da tela principal)
+# Carrega o endereço base da cópia do background em $23
+        addi $23, $18, 32768 # $23 = 0x10010000 + 32768 = 0x10018000 (Base do background)
+#inicializar fantasma vermelho
+	lui $20, 0x1001
+	addi $20, $20, 10324
+	move $28, $20
+	addi $26, $20, 96
+	addi $11, $26, 8192
+	addi $29, $28, 8192
+	li $21, 4
+	move $4, $20
+	jal draw_red_ghost
+#inicializar fantasma verde	
+	lui $25, 0x1001
+	addi $25, $25, 2292
+	move $30, $25
+	#addi $14, $25, 24576
+	li $27, 512
+	
+	move $4, $25
+	jal desenharFantasmaVerde
+
+#inicializar fantasma laranja
+	lui $12, 0x1001
+	addi $12, $12, 27508
+	move $13, $12
+	#addi $22, $12, -25600
+	li $15, -512
+	move $4, $12
+	
+	jal desenhar_laranja
+
+#inicializar fantasma azul
+	lui $22, 0x1001
+	addi $22,$22 , 2224
+	li $14, -4
+	move $4, $22
+	
+	jal desenhar_azul
+
+#incializar pacman
+	lui $16, 0x1001
+	addi $16, $16, 2100
+	
+	move $4, $16
+	
+	jal draw_pacman
+	
+	j game_loop
+
+game_loop:
+	jal delay
+	
+	
+	move $4, $16
+	move $5, $18
+	move $6, $23
+	jal erase_pacman
+	
+	jal check_pacman_input_and_move
+	
+	add $16, $16, $17
+	move $4, $16
+	jal draw_pacman
+	
+	j fantasmas
+	
+	#Fantasmas
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+fantasmas:	
+	move $4, $20         # Passa a posição ATUAL do fantasma ($20) para $4 (a0)
+    	move $5, $18        # Passa a base da tela principal ($16) para $5 (a1)
+    	move $6, $23         # Passa a base da cópia de fundo ($17) para $6 (a2)
+   	jal erase_red_ghost  # Chama a função que apaga o fantasma da tela
+	add $20, $20, $21
+	
+	beq $20,$26, desce
+	beq $20, $28, inverte
+	beq $20, $11, esquerda
+	beq $20, $29, sobe
+	
+	
+	
+	
+	j desenha_vermelho
+sobe:
+	li $21, -512
+	j desenha_vermelho
+esquerda:
+	li $21, -4	
+	j desenha_vermelho
+desce:
+	li $21, 512
+	j desenha_vermelho	
+inverte:
+	li $21, 4
+	
+desenha_vermelho:
+	move $4, $20
+	jal draw_red_ghost
+	
+	
+	move $4, $25         # Passa a posição ATUAL do fantasma ($20) para $4 (a0)
+    	move $5, $18        # Passa a base da tela principal ($16) para $5 (a1)
+    	move $6, $23
+    	
+    	jal erase_green_ghost
+    	
+    	add $25, $25, $27
+    	
+	beq $25, $30, inverteVerde
+	lw $8, limite_baixo_fantasma_rosa
+    	beq $25, $8, inverteVerde
+    	j d_Verde
+	
+inverteVerde:
+	sub $27, $0, $27	
+d_Verde:	
+	move $4, $25
+    	jal desenharFantasmaVerde
+    	
+    	move $4, $12
+    	move $5, $18
+    	move $6, $23
+    	
+    	jal erase_laranja
+    	
+    	add $12, $12, $15
+    	lw $8, limite_cima_fantasma_laranja
+    	beq $12, $8, inverte_laranja
+    	beq $12, $13, inverte_laranja
+    	j d_laranja
+    	
+d_laranja:
+    	move $4, $12
+    	jal desenhar_laranja
+    	
+    	move $4, $22
+    	move $5, $18
+    	move $6, $23
+    	
+ 	jal erase_azul_claro
+ 	
+ 	add $22, $22, $14
+ 	lw $10, limite_cima_esquerdo_azul
+ 	lw $9, limite_baixo_esquerda_azul
+ 	lw $19, limite_baixo_direita_azul
+ 	lw $8, limite_cima_direito_azul
+ 	
+ 	beq $22, $10, desce_azul
+ 	beq $22, $9, direita_azul
+ 	beq $22, $19, sobe_azul
+ 	beq $22, $8, esquerda_azul
+ 	
+d_azul: move $4, $22
+ 	jal desenhar_azul
+ 	
+    	j game_loop
+desce_azul:
+	li $14, 512
+	j d_azul
+direita_azul:
+	li $14, 4
+	j d_azul
+sobe_azul:
+	li $14, -512
+	j d_azul
+esquerda_azul:
+	li $14, -4
+	j d_azul
+
+    	
+inverte_laranja:
+	sub $15, $0, $15
+	j d_laranja
+
+	
+draw_red_ghost:
+    lw $8, color_vermelho
+    lw $9, color_azul
+    lw $10, color_branco
+
+    sw $8, 0($4)
+    sw $8, 4($4)
+    sw $8, 8($4)
+
+    sw $8, 512($4)
+    sw $8, 508($4)
+    sw $8, 516($4)
+    sw $8, 520($4)
+    sw $8, 524($4)
+
+    sw $8, 1016($4)
+    sw $9, 1020($4)
+    sw $10, 1024($4)
+    sw $9, 1032($4)
+    sw $10, 1036($4)
+    sw $8, 1028($4)
+    sw $8, 1040($4)
+
+    sw $8, 1528($4)
+    sw $9, 1532($4)
+    sw $10, 1536($4)
+    sw $8, 1540($4)
+    sw $9, 1544($4)
+    sw $10, 1548($4)
+    sw $8, 1552($4)
+    
+    sw $8, 2040($4)
+    sw $8, 2044($4)
+    sw $8, 2048($4)
+    sw $8, 2052($4)
+    sw $8, 2056($4)
+    sw $8, 2060($4)
+    sw $8, 2064($4)
+    
+    sw $8, 2552($4)
+    sw $8, 2556($4)
+    sw $8, 2560($4)
+    sw $8, 2564($4)
+    sw $8, 2568($4)
+    sw $8, 2572($4)
+    sw $8, 2576($4)
+    
+    sw $8, 3064($4)
+    sw $8, 3072($4)
+    sw $8, 3080($4)
+    sw $8, 3088($4)
+    
+    jr $31
+erase_red_ghost:
+    # Registradores temporários para cálculos
+    # $8: Para guardar o offset da UG em relação ao inicio da tela principal.
+    # $9: Para guardar o endereço completo da UG no background.
+    # $10: Para guardar a cor carregada do background.
+
+    # ------------------------------------------------------------------------------------------------------------------------------------------
+    # APAGANDO CADA UG DO FANTASMA:
+    # Para CADA 'sw $cor, OFFSET($4)' em 'desenharFantasmaVerde', há um bloco 'sub/add/lw/sw' correspondente aqui.
+    # ------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Apagando UG em 0($4)
+    sub $8, $4, $5       # Calcula o offset da UG em relação ao início da tela principal
+    add $9, $6, $8       # Calcula o endereço da UG correspondente na cópia de fundo
+    lw $10, 0($9)        # Carrega a cor de fundo para $10
+    sw $10, 0($4)        # Salva a cor de fundo na tela principal (apaga a UG do fantasma)
+
+    # Apagando UG em 4($4)
+    addi $19, $4, 4      # Calcula o endereço da UG atual na tela principal
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 8($4)
+    addi $19, $4, 8
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 508($4)
+    addi $19, $4, 508
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 512($4)
+    addi $19, $4, 512
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 516($4)
+    addi $19, $4, 516
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 520($4)
+    addi $19, $4, 520
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 524($4)
+    addi $19, $4, 524
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1016($4)
+    addi $19, $4, 1016
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1020($4)
+    addi $19, $4, 1020
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1024($4)
+    addi $19, $4, 1024
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1028($4)
+    addi $19, $4, 1028
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1032($4)
+    addi $19, $4, 1032
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1036($4)
+    addi $19, $4, 1036
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1040($4)
+    addi $19, $4, 1040
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1528($4)
+    addi $19, $4, 1528
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1532($4)
+    addi $19, $4, 1532
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1536($4)
+    addi $19, $4, 1536
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1540($4)
+    addi $19, $4, 1540
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1544($4)
+    addi $19, $4, 1544
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1548($4)
+    addi $19, $4, 1548
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1552($4)
+    addi $19, $4, 1552
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2040($4)
+    addi $19, $4, 2040
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2044($4)
+    addi $19, $4, 2044
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2048($4)
+    addi $19, $4, 2048
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2052($4)
+    addi $19, $4, 2052
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2056($4)
+    addi $19, $4, 2056
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2060($4)
+    addi $19, $4, 2060
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2064($4)
+    addi $19, $4, 2064
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2552($4)
+    addi $19, $4, 2552
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2556($4)
+    addi $19, $4, 2556
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2560($4)
+    addi $19, $4, 2560
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2564($4)
+    addi $19, $4, 2564
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2568($4)
+    addi $19, $4, 2568
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2572($4)
+    addi $19, $4, 2572
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2576($4)
+    addi $19, $4, 2576
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3064($4)
+    addi $19, $4, 3064
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3072($4)
+    addi $19, $4, 3072
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3080($4)
+    addi $19, $4, 3080
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3088($4)
+    addi $19, $4, 3088
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    jr $31
+    
+desenharFantasmaVerde:
+    lw $8, color_rosa
+    lw $9, color_azul
+    lw $10, color_branco
+
+    sw $8, 0($4)
+    sw $8, 4($4)
+    sw $8, 8($4)
+
+    sw $8, 512($4)
+    sw $8, 508($4)
+    sw $8, 516($4)
+    sw $8, 520($4)
+    sw $8, 524($4)
+
+    sw $8, 1016($4)
+    sw $9, 1020($4)
+    sw $10, 1024($4)
+    sw $9, 1032($4)
+    sw $10, 1036($4)
+    sw $8, 1028($4)
+    sw $8, 1040($4)
+
+    sw $8, 1528($4)
+    sw $9, 1532($4)
+    sw $10, 1536($4)
+    sw $8, 1540($4)
+    sw $9, 1544($4)
+    sw $10, 1548($4)
+    sw $8, 1552($4)
+    
+    sw $8, 2040($4)
+    sw $8, 2044($4)
+    sw $8, 2048($4)
+    sw $8, 2052($4)
+    sw $8, 2056($4)
+    sw $8, 2060($4)
+    sw $8, 2064($4)
+    
+    sw $8, 2552($4)
+    sw $8, 2556($4)
+    sw $8, 2560($4)
+    sw $8, 2564($4)
+    sw $8, 2568($4)
+    sw $8, 2572($4)
+    sw $8, 2576($4)
+    
+    sw $8, 3064($4)
+    sw $8, 3072($4)
+    sw $8, 3080($4)
+    sw $8, 3088($4)
+    
+    jr $31
+    
+erase_green_ghost:
+    # Registradores temporários para cálculos
+    # $8: Para guardar o offset da UG em relação ao inicio da tela principal.
+    # $9: Para guardar o endereço completo da UG no background.
+    # $10: Para guardar a cor carregada do background.
+
+    # ------------------------------------------------------------------------------------------------------------------------------------------
+    # APAGANDO CADA UG DO FANTASMA:
+    # Para CADA 'sw $cor, OFFSET($4)' em 'desenharFantasmaVerde', há um bloco 'sub/add/lw/sw' correspondente aqui.
+    # ------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Apagando UG em 0($4)
+    sub $8, $4, $5       # Calcula o offset da UG em relação ao início da tela principal
+    add $9, $6, $8       # Calcula o endereço da UG correspondente na cópia de fundo
+    lw $10, 0($9)        # Carrega a cor de fundo para $10
+    sw $10, 0($4)        # Salva a cor de fundo na tela principal (apaga a UG do fantasma)
+
+    # Apagando UG em 4($4)
+    addi $19, $4, 4      # Calcula o endereço da UG atual na tela principal
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 8($4)
+    addi $19, $4, 8
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 508($4)
+    addi $19, $4, 508
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 512($4)
+    addi $19, $4, 512
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 516($4)
+    addi $19, $4, 516
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 520($4)
+    addi $19, $4, 520
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 524($4)
+    addi $19, $4, 524
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1016($4)
+    addi $19, $4, 1016
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1020($4)
+    addi $19, $4, 1020
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1024($4)
+    addi $19, $4, 1024
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1028($4)
+    addi $19, $4, 1028
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1032($4)
+    addi $19, $4, 1032
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1036($4)
+    addi $19, $4, 1036
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1040($4)
+    addi $19, $4, 1040
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1528($4)
+    addi $19, $4, 1528
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1532($4)
+    addi $19, $4, 1532
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1536($4)
+    addi $19, $4, 1536
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1540($4)
+    addi $19, $4, 1540
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1544($4)
+    addi $19, $4, 1544
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1548($4)
+    addi $19, $4, 1548
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1552($4)
+    addi $19, $4, 1552
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2040($4)
+    addi $19, $4, 2040
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2044($4)
+    addi $19, $4, 2044
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2048($4)
+    addi $19, $4, 2048
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2052($4)
+    addi $19, $4, 2052
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2056($4)
+    addi $19, $4, 2056
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2060($4)
+    addi $19, $4, 2060
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2064($4)
+    addi $19, $4, 2064
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2552($4)
+    addi $19, $4, 2552
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2556($4)
+    addi $19, $4, 2556
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2560($4)
+    addi $19, $4, 2560
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2564($4)
+    addi $19, $4, 2564
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2568($4)
+    addi $19, $4, 2568
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2572($4)
+    addi $19, $4, 2572
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2576($4)
+    addi $19, $4, 2576
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3064($4)
+    addi $19, $4, 3064
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3072($4)
+    addi $19, $4, 3072
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3080($4)
+    addi $19, $4, 3080
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3088($4)
+    addi $19, $4, 3088
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    jr $31
+    
+desenhar_laranja:
+    lw $8, color_laranja
+    lw $9, color_azul
+    lw $10, color_branco
+
+    sw $8, 0($4)
+    sw $8, 4($4)
+    sw $8, 8($4)
+
+    sw $8, 512($4)
+    sw $8, 508($4)
+    sw $8, 516($4)
+    sw $8, 520($4)
+    sw $8, 524($4)
+
+    sw $8, 1016($4)
+    sw $9, 1020($4)
+    sw $10, 1024($4)
+    sw $9, 1032($4)
+    sw $10, 1036($4)
+    sw $8, 1028($4)
+    sw $8, 1040($4)
+
+    sw $8, 1528($4)
+    sw $9, 1532($4)
+    sw $10, 1536($4)
+    sw $8, 1540($4)
+    sw $9, 1544($4)
+    sw $10, 1548($4)
+    sw $8, 1552($4)
+    
+    sw $8, 2040($4)
+    sw $8, 2044($4)
+    sw $8, 2048($4)
+    sw $8, 2052($4)
+    sw $8, 2056($4)
+    sw $8, 2060($4)
+    sw $8, 2064($4)
+    
+    sw $8, 2552($4)
+    sw $8, 2556($4)
+    sw $8, 2560($4)
+    sw $8, 2564($4)
+    sw $8, 2568($4)
+    sw $8, 2572($4)
+    sw $8, 2576($4)
+    
+    sw $8, 3064($4)
+    sw $8, 3072($4)
+    sw $8, 3080($4)
+    sw $8, 3088($4)
+    
+    jr $31
+erase_laranja:	
+    # Registradores temporários para cálculos
+    # $8: Para guardar o offset da UG em relação ao inicio da tela principal.
+    # $9: Para guardar o endereço completo da UG no background.
+    # $10: Para guardar a cor carregada do background.
+
+    # ------------------------------------------------------------------------------------------------------------------------------------------
+    # APAGANDO CADA UG DO FANTASMA:
+    # Para CADA 'sw $cor, OFFSET($4)' em 'desenharFantasmaVerde', há um bloco 'sub/add/lw/sw' correspondente aqui.
+    # ------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Apagando UG em 0($4)
+    sub $8, $4, $5       # Calcula o offset da UG em relação ao início da tela principal
+    add $9, $6, $8       # Calcula o endereço da UG correspondente na cópia de fundo
+    lw $10, 0($9)        # Carrega a cor de fundo para $10
+    sw $10, 0($4)        # Salva a cor de fundo na tela principal (apaga a UG do fantasma)
+
+    # Apagando UG em 4($4)
+    addi $19, $4, 4      # Calcula o endereço da UG atual na tela principal
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 8($4)
+    addi $19, $4, 8
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 508($4)
+    addi $19, $4, 508
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 512($4)
+    addi $19, $4, 512
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 516($4)
+    addi $19, $4, 516
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 520($4)
+    addi $19, $4, 520
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 524($4)
+    addi $19, $4, 524
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1016($4)
+    addi $19, $4, 1016
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1020($4)
+    addi $19, $4, 1020
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1024($4)
+    addi $19, $4, 1024
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1028($4)
+    addi $19, $4, 1028
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1032($4)
+    addi $19, $4, 1032
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1036($4)
+    addi $19, $4, 1036
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1040($4)
+    addi $19, $4, 1040
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1528($4)
+    addi $19, $4, 1528
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1532($4)
+    addi $19, $4, 1532
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1536($4)
+    addi $19, $4, 1536
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1540($4)
+    addi $19, $4, 1540
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1544($4)
+    addi $19, $4, 1544
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1548($4)
+    addi $19, $4, 1548
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1552($4)
+    addi $19, $4, 1552
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2040($4)
+    addi $19, $4, 2040
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2044($4)
+    addi $19, $4, 2044
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2048($4)
+    addi $19, $4, 2048
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2052($4)
+    addi $19, $4, 2052
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2056($4)
+    addi $19, $4, 2056
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2060($4)
+    addi $19, $4, 2060
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2064($4)
+    addi $19, $4, 2064
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2552($4)
+    addi $19, $4, 2552
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2556($4)
+    addi $19, $4, 2556
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2560($4)
+    addi $19, $4, 2560
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2564($4)
+    addi $19, $4, 2564
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2568($4)
+    addi $19, $4, 2568
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2572($4)
+    addi $19, $4, 2572
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2576($4)
+    addi $19, $4, 2576
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3064($4)
+    addi $19, $4, 3064
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3072($4)
+    addi $19, $4, 3072
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3080($4)
+    addi $19, $4, 3080
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3088($4)
+    addi $19, $4, 3088
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    jr $31
+desenhar_azul:
+    lw $8, color_azul_claro
+    lw $9, color_azul
+    lw $10, color_branco
+
+    sw $8, 0($4)
+    sw $8, 4($4)
+    sw $8, 8($4)
+
+    sw $8, 512($4)
+    sw $8, 508($4)
+    sw $8, 516($4)
+    sw $8, 520($4)
+    sw $8, 524($4)
+
+    sw $8, 1016($4)
+    sw $9, 1020($4)
+    sw $10, 1024($4)
+    sw $9, 1032($4)
+    sw $10, 1036($4)
+    sw $8, 1028($4)
+    sw $8, 1040($4)
+
+    sw $8, 1528($4)
+    sw $9, 1532($4)
+    sw $10, 1536($4)
+    sw $8, 1540($4)
+    sw $9, 1544($4)
+    sw $10, 1548($4)
+    sw $8, 1552($4)
+    
+    sw $8, 2040($4)
+    sw $8, 2044($4)
+    sw $8, 2048($4)
+    sw $8, 2052($4)
+    sw $8, 2056($4)
+    sw $8, 2060($4)
+    sw $8, 2064($4)
+    
+    sw $8, 2552($4)
+    sw $8, 2556($4)
+    sw $8, 2560($4)
+    sw $8, 2564($4)
+    sw $8, 2568($4)
+    sw $8, 2572($4)
+    sw $8, 2576($4)
+    
+    sw $8, 3064($4)
+    sw $8, 3072($4)
+    sw $8, 3080($4)
+    sw $8, 3088($4)
+    
+    jr $31
+erase_azul_claro:	
+    # Registradores temporários para cálculos
+    # $8: Para guardar o offset da UG em relação ao inicio da tela principal.
+    # $9: Para guardar o endereço completo da UG no background.
+    # $10: Para guardar a cor carregada do background.
+
+    # ------------------------------------------------------------------------------------------------------------------------------------------
+    # APAGANDO CADA UG DO FANTASMA:
+    # Para CADA 'sw $cor, OFFSET($4)' em 'desenharFantasmaVerde', há um bloco 'sub/add/lw/sw' correspondente aqui.
+    # ------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Apagando UG em 0($4)
+    sub $8, $4, $5       # Calcula o offset da UG em relação ao início da tela principal
+    add $9, $6, $8       # Calcula o endereço da UG correspondente na cópia de fundo
+    lw $10, 0($9)        # Carrega a cor de fundo para $10
+    sw $10, 0($4)        # Salva a cor de fundo na tela principal (apaga a UG do fantasma)
+
+    # Apagando UG em 4($4)
+    addi $19, $4, 4      # Calcula o endereço da UG atual na tela principal
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 8($4)
+    addi $19, $4, 8
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 508($4)
+    addi $19, $4, 508
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 512($4)
+    addi $19, $4, 512
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 516($4)
+    addi $19, $4, 516
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 520($4)
+    addi $19, $4, 520
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 524($4)
+    addi $19, $4, 524
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1016($4)
+    addi $19, $4, 1016
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1020($4)
+    addi $19, $4, 1020
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1024($4)
+    addi $19, $4, 1024
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1028($4)
+    addi $19, $4, 1028
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1032($4)
+    addi $19, $4, 1032
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1036($4)
+    addi $19, $4, 1036
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1040($4)
+    addi $19, $4, 1040
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1528($4)
+    addi $19, $4, 1528
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1532($4)
+    addi $19, $4, 1532
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1536($4)
+    addi $19, $4, 1536
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1540($4)
+    addi $19, $4, 1540
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1544($4)
+    addi $19, $4, 1544
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1548($4)
+    addi $19, $4, 1548
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 1552($4)
+    addi $19, $4, 1552
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2040($4)
+    addi $19, $4, 2040
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2044($4)
+    addi $19, $4, 2044
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2048($4)
+    addi $19, $4, 2048
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2052($4)
+    addi $19, $4, 2052
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2056($4)
+    addi $19, $4, 2056
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2060($4)
+    addi $19, $4, 2060
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2064($4)
+    addi $19, $4, 2064
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2552($4)
+    addi $19, $4, 2552
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2556($4)
+    addi $19, $4, 2556
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2560($4)
+    addi $19, $4, 2560
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2564($4)
+    addi $19, $4, 2564
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2568($4)
+    addi $19, $4, 2568
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2572($4)
+    addi $19, $4, 2572
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 2576($4)
+    addi $19, $4, 2576
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3064($4)
+    addi $19, $4, 3064
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3072($4)
+    addi $19, $4, 3072
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3080($4)
+    addi $19, $4, 3080
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando UG em 3088($4)
+    addi $19, $4, 3088
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    jr $31
+draw_pacman:
+	# Carrega as cores necessárias para esta rotina APENAS UMA VEZ no início
+	lw $8, color_amarelo  # Carrega AMARELO para $8 (para os detalhes da boca)
+	lw $9, color_laranja  # Carrega LARANJA para $9 (para o corpo do Pac-Man)
+
+	#primeira linha (Corpo do Pac-Man, usando $9 - laranja)
+	sw $9, 0($4)
+	sw $9, 4($4)
+	sw $9, 8($4)
+	#segunda linha
+	sw $9, 508($4)  # Corpo (laranja)
+	sw $8, 512($4)  # Detalhe (amarelo)
+	sw $8, 516($4)  # Detalhe (amarelo)
+	sw $8, 520($4)  # Detalhe (amarelo)
+	sw $9, 524($4)  # Corpo (laranja)
+	#terceira linha
+	sw $9, 1016($4) # Corpo (laranja)
+	sw $8, 1020($4) # Detalhe (amarelo)
+	sw $8, 1024($4) # Detalhe (amarelo)
+	sw $8, 1028($4) # Detalhe (amarelo)
+	sw $8, 1032($4) # Detalhe (amarelo)
+	sw $8, 1036($4) # Detalhe (amarelo)
+	sw $9, 1040($4) # Corpo (laranja)
+	#quarta linha
+	sw $9, 1528($4) # Corpo (laranja)
+	sw $8, 1532($4) # Detalhe (amarelo)
+	sw $8, 1536($4) # Detalhe (amarelo)
+	sw $8, 1540($4) # Detalhe (amarelo)
+	sw $9, 1544($4) # Corpo (laranja)
+	#quinta linha
+	sw $9, 2040($4) # Corpo (laranja)
+	sw $8, 2044($4) # Detalhe (amarelo)
+	sw $8, 2048($4) # Detalhe (amarelo)
+	sw $8, 2052($4) # Detalhe (amarelo)
+	sw $8, 2056($4) # Detalhe (amarelo)
+	sw $8, 2060($4) # Detalhe (amarelo)
+	sw $9, 2064($4) # Corpo (laranja)
+	#sexta linha
+	sw $9, 2556($4) # Corpo (laranja)
+	sw $8, 2560($4) # Detalhe (amarelo)
+	sw $8, 2564($4) # Detalhe (amarelo)
+	sw $8, 2568($4) # Detalhe (amarelo)
+	sw $9, 2572($4) # Corpo (laranja)
+	#setima linha
+	sw $9, 3072($4) # Corpo (laranja)
+	sw $9, 3076($4) # Corpo (laranja)
+	sw $9, 3080($4) # Corpo (laranja)
+	jr $31
+erase_pacman:
+    # Registradores temporários para cálculos (usando seus nomes numéricos)
+    # $8: Para guardar o offset da UG em relação ao inicio da tela principal.
+    # $9: Para guardar o endereço completo da UG no background.
+    # $10: Para guardar a cor carregada do background.
+    # $19: Para calcular o endereço absoluto da UG atual na tela principal.
+
+    # ----------------------------------------------------------------------------------
+    # APAGANDO CADA UG DO PAC-MAN:
+    # Para CADA 'sw $cor, OFFSET($4)' na sua rotina de desenho,
+    # há um bloco correspondente 'sub/add/lw/sw' aqui.
+    # ----------------------------------------------------------------------------------
+
+    # Apagando primeira linha (0($4), 4($4), 8($4))
+    # UG em 0($4)
+    sub $8, $4, $5           # Offset = (Endereço UG atual) - (Base tela principal)
+    add $9, $6, $8           # Endereço BG = (Base BG) + Offset
+    lw $10, 0($9)            # Carrega cor do BG
+    sw $10, 0($4)            # Escreve cor do BG na tela principal
+
+    # UG em 4($4)
+    addi $19, $4, 4          # Endereço UG atual na tela principal
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 8($4)
+    addi $19, $4, 8
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando segunda linha (508($4), 512($4), 516($4), 520($4), 524($4))
+    # UG em 508($4)
+    addi $19, $4, 508
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 512($4)
+    addi $19, $4, 512
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 516($4)
+    addi $19, $4, 516
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 520($4)
+    addi $19, $4, 520
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 524($4)
+    addi $19, $4, 524
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando terceira linha (1016($4) a 1040($4))
+    # UG em 1016($4)
+    addi $19, $4, 1016
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 1020($4)
+    addi $19, $4, 1020
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 1024($4)
+    addi $19, $4, 1024
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 1028($4)
+    addi $19, $4, 1028
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 1032($4)
+    addi $19, $4, 1032
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 1036($4)
+    addi $19, $4, 1036
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 1040($4)
+    addi $19, $4, 1040
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando quarta linha (1528($4) a 1544($4))
+    # UG em 1528($4)
+    addi $19, $4, 1528
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 1532($4)
+    addi $19, $4, 1532
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 1536($4)
+    addi $19, $4, 1536
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 1540($4)
+    addi $19, $4, 1540
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 1544($4)
+    addi $19, $4, 1544
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando quinta linha (2040($4) a 2064($4))
+    # UG em 2040($4)
+    addi $19, $4, 2040
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 2044($4)
+    addi $19, $4, 2044
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 2048($4)
+    addi $19, $4, 2048
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 2052($4)
+    addi $19, $4, 2052
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 2056($4)
+    addi $19, $4, 2056
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 2060($4)
+    addi $19, $4, 2060
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 2064($4)
+    addi $19, $4, 2064
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando sexta linha (2556($4) a 2572($4))
+    # UG em 2556($4)
+    addi $19, $4, 2556
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 2560($4)
+    addi $19, $4, 2560
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 2564($4)
+    addi $19, $4, 2564
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 2568($4)
+    addi $19, $4, 2568
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 2572($4)
+    addi $19, $4, 2572
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # Apagando sétima linha (3072($4) a 3080($4))
+    # UG em 3072($4)
+    addi $19, $4, 3072
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 3076($4)
+    addi $19, $4, 3076
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    # UG em 3080($4)
+    addi $19, $4, 3080
+    sub $8, $19, $5
+    add $9, $6, $8
+    lw $10, 0($9)
+    sw $10, 0($19)
+
+    jr $31
+delay:
+    addi $24, $0, 1999
+lacoD:
+    beq $24, $0, fimD
+    nop
+    nop
+    addi $24, $24, -1
+    j lacoD
+fimD:
+    jr $31
+check_pacman_input_and_move: # Nova função que combina input e colisão
+    # Registradores $s0 ($16) = Pac-Man Position
+    # Registradores $s1 ($17) = Pac-Man Direction (AGORA USADO DIRETAMENTE PARA A NOVA DIREÇÃO)
+    # Argumentos passados implicitamente para erase/draw: $a0 ($4), $a1 ($5), $a2 ($6)
+    # Mantenha os $a registers consistentes com $18 e $23 para tela/bg base.
+
+    # Salva registradores temporários que serão usados na função
+    addi $sp, $sp, -12   # Aloca espaço na stack (3 palavras)
+    sw $8, 8($sp)        # Salva $t0 (registrador $8)
+    sw $9, 4($sp)        # Salva $t1 (registrador $9)
+    sw $10, 0($sp)       # Salva $t2 (registrador $10)
+
+    # 1. Checa por Input do Teclado
+    lw $8, KBD_CONTROL   # Carrega o status do teclado (usando .eqv KBD_CONTROL)
+    andi $8, $8, 0x0001  # Isola o bit 0 (data ready)
+
+    beq $8, $0, no_new_input_pacman # Se bit 0 é zero, nenhuma tecla nova foi pressionada
+
+    # Se há input, lê a tecla
+    lw $9, KBD_DATA      # Lê o código ASCII da tecla pressionada (usando .eqv KBD_DATA)
+
+    # 2. Define a Nova Direção Baseada na Tecla
+    # A nova direção será diretamente no $17 ($s1)
+    li $17, 0 # Assume parado por padrão, se nenhuma tecla de movimento for válida
+
+    # Tecla Cima (W/w)
+    li $8, 'W'
+    beq $9, $8, set_dir_up_pacman
+    li $8, 'w'
+    beq $9, $8, set_dir_up_pacman
+
+    # Tecla Esquerda (A/a)
+    li $8, 'A'
+    beq $9, $8, set_dir_left_pacman
+    li $8, 'a'
+    beq $9, $8, set_dir_left_pacman
+
+    # Tecla Baixo (S/s)
+    li $8, 'S'
+    beq $9, $8, set_dir_down_pacman
+    li $8, 's'
+    beq $9, $8, set_dir_down_pacman
+
+    # Tecla Direita (D/d)
+    li $8, 'D'
+    beq $9, $8, set_dir_right_pacman
+    li $8, 'd'
+    beq $9, $8, set_dir_right_pacman
+
+    # Se nenhuma tecla de movimento válida foi pressionada, $17 já está 0.
+    # Pula direto para a checagem de validade.
+    j check_movement_validity_pacman_after_input
+
+# --- Labels para definir a direção do Pac-Man ---
+set_dir_up_pacman:
+    li $17, -512 # Define a direção para CIMA diretamente em $17
+    j check_movement_validity_pacman_after_input
+
+set_dir_left_pacman:
+    li $17, -4   # Define a direção para ESQUERDA diretamente em $17
+    j check_movement_validity_pacman_after_input
+
+set_dir_down_pacman:
+    li $17, 512  # Define a direção para BAIXO diretamente em $17
+    j check_movement_validity_pacman_after_input
+
+set_dir_right_pacman:
+    li $17, 4    # Define a direção para DIREITA diretamente em $17
+    j check_movement_validity_pacman_after_input
+
+no_new_input_pacman:
+    # Se não houve novo input, Pac-Man continua se movendo na última direção.
+    # $17 já contém a direção anterior, então não precisa fazer nada aqui a não ser pular.
+    # Apenas se a lógica de cima não mudou $17, ele mantém o valor.
+    # move $17, $17 # (Redundante, mas para clareza: $17 mantém seu valor)
+
+check_movement_validity_pacman_after_input: # Label para unificar o fluxo após a definição de direção
+
+    # 3. Detecção de Colisão com Paredes e Lógica de Comer Bolinha
+    # Calcula a PRÓXIMA posição do Pac-Man baseada em $17 (direção proposta/atual)
+
+    move $8, $16         # $8 = posição atual do Pac-Man ($s0)
+    move $9, $17         # $9 = direção proposta ($s1)
+
+    # Se a direção proposta for 0 (parado), não há movimento para checar colisão
+    beq $9, $0, no_move_pacman
+
+    # Calcula o endereço do "sensor" para colisão (o pixel que vai "bater")
+
+    # Para CIMA (-512):
+    bne $9, -512, check_left_collision # Se não é UP, pula para próxima checagem
+    addi $19, $16, -1036    # $19 = $16 + (-512) = Endereço do pixel acima do Pac-Man
+    lw $8, 0($19)        # Carrega a cor do pixel "acima" do Pac-Man em $8 (reutiliza $t0)
+    lw $10, color_azul      # Carrega a cor AZUL (parede) em $t2
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, -1004    # $19 = $16 + (-512) = Endereço do pixel acima do Pac-Man
+    lw $8, 0($19)
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, -1024
+    lw $8, 0($19)
+    lw $10, color_rosa
+    beq $8, $10, fim
+    
+    addi $19, $16, -1024
+    lw $8, 0($19)
+    lw $10, color_laranja
+    beq $8, $10, fim
+    
+    addi $19, $16, -1024
+    lw $8, 0($19)
+    lw $10, color_vermelho
+    beq $8, $10, fim
+    
+    addi $19, $16, -1020    # $19 = $16 + (-512) = Endereço do pixel acima do Pac-Man
+    lw $8, 0($19)
+    lw $10, color_azul
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, -508    # $19 = $16 + (-512) = Endereço do pixel acima do Pac-Man
+    lw $8, 0($19)
+    beq $8, $10, collision_with_wall_pacman
+    
+    lw $10, color_amarelo   # Carrega a cor AMARELO (bolinha) em $t2
+    beq $8, $10, eat_dot_and_move_pacman # Se é bolinha, come e continua (não para o fluxo aqui)
+    j apply_pacman_movement
+
+check_left_collision:
+    bne $9, -4, check_down_collision # Se não é LEFT, pula
+    addi $19, $16, -528     # $19 = $16 + (-4) = Endereço do pixel à esquerda do Pac-Man
+    lw $8, 0($19)        # Carrega a cor do pixel "à esquerda" do Pac-Man em $8
+    lw $10, color_azul      # Carrega a cor AZUL (parede) em $t2
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, 3568     # $19 = $16 + (-4) = Endereço do pixel à esquerda do Pac-Man
+    lw $8, 0($19)
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, 1516  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_laranja
+    beq $8, $10, fim
+    
+    addi $19, $16, 1516  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_rosa
+    beq $8, $10, fim
+   
+    addi $19, $16, 1516     # $19 = $16 + (-4) = Endereço do pixel à esquerda do Pac-Man
+    lw $8, 0($19)
+    lw $10, color_vermelho
+    beq $8, $10, fim
+    
+    addi $19, $16, 1520     # $19 = $16 + (-4) = Endereço do pixel à esquerda do Pac-Man
+    lw $8, 0($19)
+    lw $10, color_azul
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, 1524     # $19 = $16 + (-4) = Endereço do pixel à esquerda do Pac-Man
+    lw $8, 0($19)
+    lw $10, color_amarelo
+    beq $8, $10, eat_dot_and_move_pacman # Se é bolinha, come e continua (não para o fluxo aqui)
+    j apply_pacman_movement
+
+check_down_collision:
+    bne $9, 512, check_right_collision # Se não é DOWN, pula
+    addi $19, $16, 4084  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)        # Carrega a cor do pixel "abaixo" do Pac-Man em $8
+    lw $10, color_azul      # Carrega a cor AZUL (parede) em $t2
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, 4116  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, 4096  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_rosa
+    beq $8, $10, fim
+    
+    addi $19, $16, 4096  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_laranja
+    beq $8, $10, fim
+    
+    addi $19, $16, 4096  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_vermelho
+    beq $8, $10, fim
+    
+    
+    addi $19, $16, 4100  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_azul
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, 3588  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_amarelo
+    beq $8, $10, eat_dot_and_move_pacman # Se é bolinha, come e continua (não para o fluxo aqui)
+    j apply_pacman_movement
+
+check_right_collision:
+    bne $9, 4, no_valid_movement_direction # Se não é RIGHT, e não é outra direção, então não há movimento válido.
+    addi $19, $16, -488     # Pega o pixel mais à direita do Pac-Man na primeira linha (offset 8)
+    lw $8, 0($19)        # Carrega a cor do pixel "à direita" do Pac-Man em $8
+    lw $10, color_azul
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, 3608     # Pega o pixel mais à direita do Pac-Man na primeira linha (offset 8)
+    lw $8, 0($19)
+    lw $10, color_azul
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, 1556  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_rosa
+    beq $8, $10, fim
+    
+    addi $19, $16, 1556  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_laranja
+    beq $8, $10, fim
+    
+    addi $19, $16, 1556  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_vermelho
+    beq $8, $10, fim
+    
+    addi $19, $16, 1560  # Pega o pixel do centro da base do Pac-Man (offset 3076)
+    lw $8, 0($19)
+    lw $10, color_azul
+    beq $8, $10, collision_with_wall_pacman
+    
+    addi $19, $16, 1556     # Pega o pixel mais à direita do Pac-Man na primeira linha (offset 8)
+    lw $8, 0($19)
+    lw $10, color_amarelo
+    beq $8, $10, eat_dot_and_move_pacman
+    j apply_pacman_movement
+    
+no_valid_movement_direction: # Se nenhuma das direções específicas foi encontrada
+    li $17, 0 # Se chegou aqui e $9 não era uma direção de movimento esperada, Pac-Man para.
+    j end_pacman_movement_logic
+
+collision_with_ghost:
+    lw $10, color_vermelho
+    beq $8, $10, fim
+
+collision_with_wall_pacman:
+    li $17, 0            # Pac-Man para se colidir com parede
+    j end_pacman_movement_logic # Pula o movimento, Pac-Man fica parado
+
+eat_dot_and_move_pacman:
+    # Lógica de Comer Bolinha: Apagar do Background e Pontuar
+    # $19 já tem o endereço da bolinha na TELA PRINCIPAL (próxima posição do Pac-Man / sensor)
+	
+    # Calcula o endereço da bolinha na CÓPIA DO BACKGROUND
+    sub $8, $19, $18     # $8 = Offset da bolinha em relação à tela principal
+    add $9, $23, $8      # $9 = Endereço da bolinha na CÓPIA DO BACKGROUND
+    lw $10, color_preto  # Carrega a cor PRETA para apagar
+    sw $10, 0($9)        # Escreve PRETO no background, no local da bolinha
+    
+    addi $a1 $0 80 # tempo
+    addi $a2 $0 83 # instrumento
+    addi $a3 $0 75 # volume                #si
+    addi $a0 $0 72 # nota
+    addi $v0 $0 31 # syscall
+    syscall
+    
+    lw $3, contador
+    addi $3, $3, -1
+    sw $3, contador
+    beq $3, $0, fim
+    
+
+    # Opcional: Adicionar pontuação aqui
+    # addi $score_register, $score_register, 10
+
+    # Agora, permite que o Pac-Man se mova para essa posição
+    # $17 já contém a direção, nada mais a fazer aqui
+    j apply_pacman_movement
+
+apply_pacman_movement:
+    # Atualiza a posição do Pac-Man (apenas se a direção em $17 não for 0)
+    add $16, $16, $17    # Move o Pac-Man para a nova posição
+
+no_move_pacman: # Se a direção proposta era 0, ou se não era uma
+direção_de_movimento_válida:
+
+    # Pac-Man não se moveu, não precisa fazer nada aqui a não ser pular para o fim.
+
+end_pacman_movement_logic:
+    # Restaura registradores temporários que foram salvos
+    lw $10, 0($sp)       # Restaura $t2 (registrador $10)
+    lw $9, 4($sp)        # Restaura $t1 (registrador $9)
+    lw $8, 8($sp)        # Restaura $t0 (registrador $8)
+    addi $sp, $sp, 12    # Libera espaço na stack
+    jr $31
+fim:
+	li $2, 10
+	syscall
